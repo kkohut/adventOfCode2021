@@ -14,14 +14,14 @@ fun main() {
     val lines = Utils.readFileInput("inputs/inputDay2")
     val moves = transformToMoves(lines)
     val (horizontal1, depth1) = calculatePosition(moves)
-    println("Puzzle answer of part 1 is ${horizontal1 * depth1}")
+    println("Puzzle answer to part 1 is ${horizontal1 * depth1}")
     val (horizontal2, depth2) = calculatePositionWithAim(moves)
-    println("Puzzle answer of part 2 is ${horizontal2 * depth2}")
+    println("Puzzle answer to part 2 is ${horizontal2 * depth2}")
 }
 
 private fun transformToMoves(lines: List<String>): List<Pair<Direction, Int>> {
-    return lines.map {
-        val splits = it.split(" ")
+    return lines.map { line ->
+        val splits = line.split(" ")
         Pair(Direction.from(splits[0]), splits[1].toInt())
     }
 }
@@ -30,8 +30,7 @@ private fun calculatePosition(moves: List<Pair<Direction, Int>>): Pair<Int, Int>
     var horizontal = 0
     var depth = 0
 
-    moves.forEach {
-        val (direction, distance) = it
+    moves.forEach { (direction, distance) ->
         when (direction) {
             Direction.FORWARD -> horizontal += distance
             Direction.UP -> depth -= distance
@@ -46,8 +45,7 @@ private fun calculatePositionWithAim(moves: List<Pair<Direction, Int>>): Pair<In
     var depth = 0
     var aim = 0
 
-    moves.forEach {
-        val (direction, distance) = it
+    moves.forEach {(direction, distance) ->
         when (direction) {
             Direction.FORWARD -> {
                 horizontal += distance
@@ -60,4 +58,3 @@ private fun calculatePositionWithAim(moves: List<Pair<Direction, Int>>): Pair<In
     }
     return Pair(horizontal, depth)
 }
-
