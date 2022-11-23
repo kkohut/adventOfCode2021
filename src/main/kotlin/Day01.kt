@@ -1,5 +1,5 @@
 fun main() {
-    val heights = Utils.readFileInput("inputs/inputDay1").map { it.toInt() }
+    val heights = Utils.readFileInput("inputs/inputDay01").map { it.toInt() }
     println("Puzzle answer to part 1 is ${calculateIncreases(heights)}.")
     println("Puzzle answer to part 2 is ${calculateAverageIncreases(heights)}.")
 }

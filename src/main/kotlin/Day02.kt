@@ -11,7 +11,7 @@ enum class Direction(val description: String) {
 }
 
 fun main() {
-    val lines = Utils.readFileInput("inputs/inputDay2")
+    val lines = Utils.readFileInput("inputs/inputDay02")
     val moves = transformToMoves(lines)
     val (horizontal1, depth1) = calculatePosition(moves)
     println("Puzzle answer to part 1 is ${horizontal1 * depth1}")

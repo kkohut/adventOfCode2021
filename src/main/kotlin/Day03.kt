@@ -1,5 +1,5 @@
 fun main() {
-    val lines = Utils.readFileInput("inputs/inputDay3")
+    val lines = Utils.readFileInput("inputs/inputDay03")
     val columnLists = columnListsOf(lines)
 
     val gammaRate = gammaRate(columnLists)

@@ -1,5 +1,5 @@
 fun main() {
-    val lines = Utils.readFileInput("inputs/inputDay4")
+    val lines = Utils.readFileInput("inputs/inputDay04")
     val draws = lines[0].split(",").map { it.toInt() }
     val boards = createBoards(lines)
 
@@ -87,8 +87,6 @@ private fun updateBoardsUntilWin(draws: List<Int>, boards: List<List<List<Int>>>
         updatedBoards = boardsAfterDraw(draw, updatedBoards)
         updatedBoards.forEachIndexed { index, board ->
             if (checkIfWon(board)) {
-                board.forEach { println(it) }
-                println("Board ${index + 1} has won!")
                 return Pair(draw, board)
             }
         }
@@ -107,8 +105,6 @@ private fun updateBoardsUntilLastHasWon(draws: List<Int>, boards: List<List<List
             if (!boardsThatHaveWon[index]) {
                 if (checkIfWon(board)) {
                     boardsThatHaveWon[index] = true
-                    board.forEach { println(it) }
-                    println("Board ${index + 1} has won!")
                     boardThatHasWonLast = board
                     numberThatHasWonLast = draw
                 }
