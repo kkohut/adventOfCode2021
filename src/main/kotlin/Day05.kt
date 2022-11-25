@@ -1,18 +1,12 @@
-import java.util.Collections.max
-
-import java.lang.Math.min
-import java.lang.Math.max
-
 fun main() {
+    fun countValuesLargerThan1(oceanFloor: Array<IntArray>): Int {
+        return oceanFloor.sumOf { it.count { i -> i > 1 } }
+    }
+
     val lines = Utils.readFileInput("inputs/inputDay05")
     val vents = vents(lines)
-    println(vents)
-    val oceanFloor = oceanFloor(vents)
-    print(oceanFloor.joinToString { row ->
-        row.joinToString { i -> if (i > 0) "$i" else "." } + "\n"
-    })
-    println("Puzzle answer to part 1 is ${countValuesLargerThan0(oceanFloor)}")
-    println("Puzzle answer to part 2 is ${null}")
+    println("Puzzle answer to part 1 is ${countValuesLargerThan1(oceanFloor(vents, false))}")
+    println("Puzzle answer to part 2 is ${countValuesLargerThan1(oceanFloor(vents, true))}")
 }
 
 private fun vents(lines: List<String>): List<Pair<Pair<Int, Int>, Pair<Int, Int>>> {
@@ -29,39 +23,41 @@ private fun vents(lines: List<String>): List<Pair<Pair<Int, Int>, Pair<Int, Int>
     }
 }
 
-private fun oceanFloor(vents: List<Pair<Pair<Int, Int>, Pair<Int, Int>>>): Array<IntArray> {
-    val dimensions = largestValues((vents))
+private fun oceanFloor(vents: List<Pair<Pair<Int, Int>, Pair<Int, Int>>>, withDiagonalVents: Boolean):
+        Array<IntArray> {
+    fun largestValues(pairsOfPairs: List<Pair<Pair<Int, Int>, Pair<Int, Int>>>): Pair<Int, Int> {
+        return Pair(
+            maxOf(pairsOfPairs.maxOf { it.first.first } + pairsOfPairs.maxOf { it.second.first }),
+            maxOf(pairsOfPairs.maxOf { it.first.second } + pairsOfPairs.maxOf { it.second.second })
+        )
+    }
+
+    val filteredVents = vents.filter { vent ->
+        withDiagonalVents || vent.first.first == vent.second.first || vent.first.second == vent.second.second
+    }
+
+    val dimensions = largestValues((filteredVents))
     val oceanFloor: Array<IntArray> = Array(dimensions.first + 1) { IntArray(dimensions.second + 1) }
-    vents
-        .filter { vent -> vent.first.first == vent.second.first || vent.first.second == vent.second.second }
+    filteredVents
         .forEach { vent ->
-            var larger = max(vent.first.first, vent.second.first)
-            var smaller = min(vent.first.first, vent.second.first)
-            if (smaller != larger) {
-                for (i in smaller..larger) {
-                    oceanFloor[vent.first.second][i]++
+            val larger1 = maxOf(vent.first.first, vent.second.first)
+            val smaller1 = minOf(vent.first.first, vent.second.first)
+            val larger2 = maxOf(vent.first.second, vent.second.second)
+            val smaller2 = minOf(vent.first.second, vent.second.second)
+
+            var index1 = smaller1
+            var index2 = smaller2
+            for (i in 0..maxOf(larger1 - smaller1, larger2 - smaller2)) {
+                if (vent.first.first != vent.second.first) {
+                    index1 = vent.first.first + if (vent.first.first == smaller1) i else -i
                 }
-            }
-            larger = max(vent.first.second, vent.second.second)
-            smaller = min(vent.first.second, vent.second.second)
-            if (smaller != larger) {
-                for (i in smaller..larger) {
-                    oceanFloor[i][vent.second.first]++
+
+                if (vent.first.second != vent.second.second) {
+                    index2 = vent.first.second + if (vent.first.second == smaller2) i else -i
                 }
+                oceanFloor[index2][index1]++
             }
         }
-
     return oceanFloor
-}
-
-private fun largestValues(pairsOfPairs: List<Pair<Pair<Int, Int>, Pair<Int, Int>>>): Pair<Int, Int> {
-    return Pair(
-        max(pairsOfPairs.map { it.first.first } + pairsOfPairs.map { it.second.first }),
-        max(pairsOfPairs.map { it.first.second } + pairsOfPairs.map { it.second.second })
-    )
-}
-
-private fun countValuesLargerThan0(oceanFloor: Array<IntArray>): Int {
-    return oceanFloor.sumOf { it.count { i -> i > 1 } }
 }
 
