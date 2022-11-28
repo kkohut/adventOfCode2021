@@ -1,24 +1,27 @@
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 fun main() {
     val lines = Utils.readFileInput("inputs/inputDay07")
     val initialPositions = lineToPositions(lines[0]).sorted()
-    val numberOfCrabsAtPositions = initialPositions.groupBy { it }.mapValues { (_, crabs) -> crabs.size}
-    println("Puzzle answer to part 1 is ${calculateCheapestTotalFuel(numberOfCrabsAtPositions)}")
-    println("Puzzle answer to part 2 is ${null}")
+    println("Puzzle answer to part 1 is ${calculateCheapestTotalFuelLinear(initialPositions)}")
+    println("Puzzle answer to part 2 is ${calculateCheapestTotalFuelIncreasing(initialPositions)}")
 }
 
-private fun calculateCheapestTotalFuel(numberOfCrabsAtPositions: Map<Int, Int>): Int {
-    val destination = numberOfCrabsAtPositions.maxBy { it.value }.key
-//    val destination = (numberOfCrabsAtPositions.map { (position, numberOfCrabsAtPosition) -> position * numberOfCrabsAtPosition}
-//        .average() / numberOfCrabsAtPositions.size).roundToInt()
 
-//    val median = numberOfCrabsAtPositions[numberOfCrabsAtPositions.size/2]
+private fun calculateCheapestTotalFuelLinear(initialPositions: List<Int>): Int {
+    val median = initialPositions[initialPositions.size / 2]
 
-    return numberOfCrabsAtPositions.map { (position, numberOfCrabs) ->
-        abs(destination - position) * numberOfCrabs
-    }.median()
+    return initialPositions.sumOf { position ->
+        abs(median - position)
+    }
+}
+
+private fun calculateCheapestTotalFuelIncreasing(initialPositions: List<Int>): Int {
+    val mean = initialPositions.average().toInt()
+    return initialPositions.sumOf { position ->
+        val distance = abs(mean - position)
+        (0..distance).sum()
+    }
 }
 
 private fun lineToPositions(line: String): List<Int> {
